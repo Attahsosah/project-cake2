@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "functions": {
+    "frontend/app/**/*.tsx": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}
