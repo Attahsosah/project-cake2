@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: cake-backend-api
+    env: php
+    rootDir: backend
+    buildCommand: composer install --no-dev --optimize-autoloader
+    startCommand: php -S 0.0.0.0:$PORT index.php
+    healthCheckPath: /
+    envVars:
+      - key: PHP_VERSION
+        value: 8.1
+      - key: JWT_SECRET
+        generateValue: true
