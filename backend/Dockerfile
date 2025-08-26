@@ -29,5 +29,8 @@ COPY . .
 # Expose port
 EXPOSE $PORT
 
-# Start the application
-CMD php -S 0.0.0.0:$PORT index.php
+# Make startup script executable
+RUN chmod +x start.sh
+
+# Start the application with debugging
+CMD ["./start.sh"]
