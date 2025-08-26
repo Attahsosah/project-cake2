@@ -49,7 +49,7 @@ export default function NotFound() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          "Why did the cake go to the party alone? Because it felt crumby!"
+          &quot;Why did the cake go to the party alone? Because it felt crumby!&quot;
         </motion.p>
       )}
 
