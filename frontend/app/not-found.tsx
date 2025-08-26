@@ -58,7 +58,7 @@ export default function NotFound() {
       {/* Floating Cakes Background */}
       <AnimatePresence>
         {floatingCakes.map((cake) => (
-          <motion.div
+        <motion.div
             key={cake.id}
             className="absolute text-4xl pointer-events-none"
             style={{ left: `${cake.x}%`, top: `${cake.y}%` }}
@@ -71,7 +71,7 @@ export default function NotFound() {
             }}
             transition={{ 
               duration: 8, 
-              repeat: Infinity, 
+              repeat: Infinity,
               delay: cake.id * 0.5,
               ease: "easeInOut"
             }}
@@ -146,7 +146,7 @@ export default function NotFound() {
         </motion.div>
 
         {/* Joke Section */}
-        <motion.div
+            <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.9 }}
@@ -169,7 +169,7 @@ export default function NotFound() {
               </motion.p>
             </AnimatePresence>
           </div>
-        </motion.div>
+            </motion.div>
 
         {/* Action Buttons */}
         <motion.div
@@ -189,18 +189,18 @@ export default function NotFound() {
               🏠 Back to Home
             </Link>
           </motion.div>
-          
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Link
-              href="/feed"
-              className="inline-block px-8 py-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
-            >
-              📖 Browse Recipes
-            </Link>
-          </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  href="/feed"
+                  className="inline-block px-8 py-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
+                >
+                  📖 Browse Recipes
+                </Link>
+              </motion.div>
         </motion.div>
 
         {/* Click Counter */}
@@ -215,13 +215,13 @@ export default function NotFound() {
         {/* Easter Egg */}
         <AnimatePresence>
           {showEasterEgg && (
-            <motion.div
+          <motion.div
               initial={{ opacity: 0, scale: 0, y: 50 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0, y: 50 }}
-              transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5 }}
               className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-2xl p-6 shadow-lg max-w-md mx-auto text-center"
-            >
+          >
               <h3 className="text-xl font-bold mb-2">🎉 You found the secret! 🎉</h3>
               <p className="text-sm">
                 You're a true cake enthusiast! Here's a virtual high-five! ✋
@@ -236,8 +236,8 @@ export default function NotFound() {
               >
                 🍰🎂🧁
               </motion.div>
-            </motion.div>
-          )}
+          </motion.div>
+        )}
         </AnimatePresence>
 
         {/* Fun Stats */}
