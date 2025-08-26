@@ -231,9 +231,8 @@ function handleLogin() {
 }
 
 function handleGetRecipes() {
+    global $conn;
     try {
-        $db = new Database();
-        $conn = $db->getConnection();
         
         // Get query parameters
         $search = $_GET['search'] ?? '';
@@ -775,7 +774,7 @@ function handleGetRecipe($recipe_id) {
     
     try {
         $stmt = $conn->prepare("
-            SELECT r.*, u.name as user_name, u.email as user_email 
+            SELECT r.*, u.username as user_name, u.email as user_email 
             FROM recipes r 
             JOIN users u ON r.user_id = u.id 
             WHERE r.id = ?
