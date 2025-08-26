@@ -8,8 +8,10 @@ export default function NotFound() {
 
   // Play sound effect when the button is clicked
   const playSound = () => {
-    const audio = new Audio("/sounds/cake-bite.mp3"); // Add a sound file in the public/sounds folder
-    audio.play();
+    if (typeof window !== 'undefined') {
+      const audio = new Audio("/sounds/cake-bite.mp3"); // Add a sound file in the public/sounds folder
+      audio.play();
+    }
   };
 
   return (
