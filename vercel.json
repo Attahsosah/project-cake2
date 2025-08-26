@@ -1,6 +1,9 @@
 {
   "version": 2,
-  "buildCommand": "chmod +x build.sh && ./build.sh",
-  "outputDirectory": "frontend/.next",
-  "installCommand": "echo 'Installation handled by build script'"
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/next"
+    }
+  ]
 }
