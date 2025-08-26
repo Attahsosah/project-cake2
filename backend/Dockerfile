@@ -27,7 +27,7 @@ RUN composer install --no-dev --optimize-autoloader
 COPY . .
 
 # Expose port
-EXPOSE 8000
+EXPOSE $PORT
 
 # Start the application
-CMD ["php", "-S", "0.0.0.0:8000", "index.php"]
+CMD php -S 0.0.0.0:$PORT index.php
