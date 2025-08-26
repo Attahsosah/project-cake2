@@ -1,6 +1,8 @@
 # Dependencies
 node_modules/
 */node_modules/
+vendor/
+*/vendor/
 
 # Build outputs
 .next/
@@ -14,6 +16,16 @@ dist/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Uploads and media files
+uploads/
+*/uploads/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.mp4
+*.mov
 
 # OS files
 .DS_Store
