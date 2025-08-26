@@ -351,6 +351,7 @@ export default function MyRecipes() {
 
                   {/* View Recipe Button */}
                   <motion.button
+                    onClick={() => router.push(`/recipe/${recipe.id}`)}
                     className="w-full mt-4 px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 transition-all"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}

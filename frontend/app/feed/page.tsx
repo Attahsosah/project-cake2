@@ -317,6 +317,7 @@ export default function FeedPage() {
               </div>
 
               <motion.button
+                onClick={() => router.push(`/recipe/${recipe.id}`)}
                 className="mt-4 px-5 py-2 rounded-xl bg-gradient-to-r from-pink-300 via-purple-200 to-yellow-200 
                            text-[#1c1c1c] font-medium hover:opacity-90 transition-all w-full"
                 whileTap={{ scale: 0.95 }}

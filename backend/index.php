@@ -54,6 +54,19 @@ switch ($path) {
         }
         break;
         
+    case (preg_match('/^\/recipes\/(\d+)$/', $path, $matches) ? $path : null):
+        $recipe_id = $matches[1];
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            handleGetRecipe($recipe_id);
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+            handleUpdateRecipe($recipe_id);
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+            handleDeleteRecipe($recipe_id);
+        } else {
+            sendResponse(405, 'Method not allowed');
+        }
+        break;
+        
     case '/my-recipes':
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             handleGetMyRecipes();
@@ -728,6 +741,133 @@ function handleCreateSampleRecipes() {
         }
         
         sendResponse(201, 'Sample recipes created successfully', ['count' => count($sampleRecipes)]);
+        
+    } catch (Exception $e) {
+        sendResponse(500, 'Database error: ' . $e->getMessage());
+    }
+}
+
+function handleGetRecipe($recipe_id) {
+    global $conn;
+    
+    try {
+        $stmt = $conn->prepare("
+            SELECT r.*, u.name as user_name, u.email as user_email 
+            FROM recipes r 
+            JOIN users u ON r.user_id = u.id 
+            WHERE r.id = ?
+        ");
+        $stmt->execute([$recipe_id]);
+        $recipe = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$recipe) {
+            sendResponse(404, 'Recipe not found');
+        }
+        
+        // Format the recipe data
+        $recipe['user'] = [
+            'name' => $recipe['user_name'],
+            'email' => $recipe['user_email']
+        ];
+        
+        // Remove the individual user fields
+        unset($recipe['user_name'], $recipe['user_email']);
+        
+        sendResponse(200, 'Recipe retrieved successfully', $recipe);
+        
+    } catch (Exception $e) {
+        sendResponse(500, 'Database error: ' . $e->getMessage());
+    }
+}
+
+function handleUpdateRecipe($recipe_id) {
+    global $conn;
+    
+    // Check authentication
+    $user = authenticateUser();
+    if (!$user) {
+        sendResponse(401, 'Unauthorized');
+    }
+    
+    try {
+        // Check if recipe exists and belongs to user
+        $stmt = $conn->prepare("SELECT user_id FROM recipes WHERE id = ?");
+        $stmt->execute([$recipe_id]);
+        $recipe = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$recipe) {
+            sendResponse(404, 'Recipe not found');
+        }
+        
+        if ($recipe['user_id'] != $user['id'] && !isAdmin($user['email'])) {
+            sendResponse(403, 'Forbidden: You can only edit your own recipes');
+        }
+        
+        // Get request data
+        $data = json_decode(file_get_contents('php://input'), true);
+        
+        // Validate required fields
+        if (empty($data['title']) || empty($data['description']) || empty($data['ingredients']) || empty($data['instructions'])) {
+            sendResponse(400, 'Missing required fields');
+        }
+        
+        // Update recipe
+        $stmt = $conn->prepare("
+            UPDATE recipes 
+            SET title = ?, description = ?, ingredients = ?, instructions = ?, 
+                prep_time = ?, cook_time = ?, servings = ?, difficulty = ?, category = ?, image_url = ?
+            WHERE id = ?
+        ");
+        
+        $stmt->execute([
+            $data['title'],
+            $data['description'],
+            $data['ingredients'],
+            $data['instructions'],
+            $data['prep_time'] ?? 0,
+            $data['cook_time'] ?? 0,
+            $data['servings'] ?? 1,
+            $data['difficulty'] ?? 'medium',
+            $data['category'] ?? 'other',
+            $data['image_url'] ?? '',
+            $recipe_id
+        ]);
+        
+        sendResponse(200, 'Recipe updated successfully');
+        
+    } catch (Exception $e) {
+        sendResponse(500, 'Database error: ' . $e->getMessage());
+    }
+}
+
+function handleDeleteRecipe($recipe_id) {
+    global $conn;
+    
+    // Check authentication
+    $user = authenticateUser();
+    if (!$user) {
+        sendResponse(401, 'Unauthorized');
+    }
+    
+    try {
+        // Check if recipe exists and belongs to user
+        $stmt = $conn->prepare("SELECT user_id FROM recipes WHERE id = ?");
+        $stmt->execute([$recipe_id]);
+        $recipe = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$recipe) {
+            sendResponse(404, 'Recipe not found');
+        }
+        
+        if ($recipe['user_id'] != $user['id'] && !isAdmin($user['email'])) {
+            sendResponse(403, 'Forbidden: You can only delete your own recipes');
+        }
+        
+        // Delete recipe
+        $stmt = $conn->prepare("DELETE FROM recipes WHERE id = ?");
+        $stmt->execute([$recipe_id]);
+        
+        sendResponse(200, 'Recipe deleted successfully');
         
     } catch (Exception $e) {
         sendResponse(500, 'Database error: ' . $e->getMessage());
