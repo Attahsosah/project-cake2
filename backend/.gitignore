@@ -1,0 +1,32 @@
+# Dependencies
+/vendor/
+composer.lock
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+error_log
+access_log
+
+# Database files (if using SQLite)
+*.sqlite
+*.sqlite3
+*.db
+
+# Uploads (if you want to exclude them)
+/uploads/*
+!uploads/.htaccess
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
