@@ -15,12 +15,16 @@ $path = str_replace('/api', '', $path);
 // Route the request
 switch ($path) {
     case '/':
-        // Healthcheck endpoint - no database connection required
+        // Healthcheck endpoint for Render
+        http_response_code(200);
         header('Content-Type: application/json');
         header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: GET');
-        header('Access-Control-Allow-Headers: Content-Type');
-        echo json_encode(['status' => 'ok', 'message' => 'Cake API Backend is running', 'timestamp' => date('Y-m-d H:i:s')]);
+        echo json_encode([
+            'status' => 'healthy',
+            'service' => 'cake-backend-api',
+            'timestamp' => date('c'),
+            'php_version' => PHP_VERSION
+        ]);
         exit;
         break;
         
