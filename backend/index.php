@@ -5,6 +5,10 @@ require_once __DIR__ . '/helpers/response.php';
 require_once __DIR__ . '/helpers/auth.php';
 require_once __DIR__ . '/config/database.php';
 
+// Initialize database connection
+$database = new Database();
+$conn = $database->getConnection();
+
 // Get the request path
 $request_uri = $_SERVER['REQUEST_URI'];
 $path = parse_url($request_uri, PHP_URL_PATH);
@@ -19,12 +23,31 @@ switch ($path) {
         http_response_code(200);
         header('Content-Type: application/json');
         header('Access-Control-Allow-Origin: *');
-        echo json_encode([
-            'status' => 'healthy',
-            'service' => 'cake-backend-api',
-            'timestamp' => date('c'),
-            'php_version' => PHP_VERSION
-        ]);
+        
+        // Check if database has recipes
+        try {
+            $stmt = $conn->prepare("SELECT COUNT(*) as count FROM recipes");
+            $stmt->execute();
+            $recipeCount = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+            
+            echo json_encode([
+                'status' => 'healthy',
+                'service' => 'cake-backend-api',
+                'timestamp' => date('c'),
+                'php_version' => PHP_VERSION,
+                'database' => 'connected',
+                'recipes_count' => $recipeCount
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => 'healthy',
+                'service' => 'cake-backend-api',
+                'timestamp' => date('c'),
+                'php_version' => PHP_VERSION,
+                'database' => 'error',
+                'error' => $e->getMessage()
+            ]);
+        }
         exit;
         break;
         
